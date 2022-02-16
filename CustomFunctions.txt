@@ -1,0 +1,6 @@
+// 测试函数
+ADDONE=
+    LAMBDA(
+        x,
+        x+1
+    )
