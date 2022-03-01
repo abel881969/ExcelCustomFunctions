@@ -1,0 +1,26 @@
+/*
+函数名称：IDENTITYCARDCHECK
+
+函数简介：检查身份证号是否正确。如果位数不足18位或者超过18位，返回“身份证号位数错误！”；如果身份证号前17位含有非数字，返回“身份证号有非法字符”；如果校验位（最后一位）错误，返回“身份证号错误”；或者，返回“身份证号正确”
+
+参数：
+card_no：身份证号
+
+示例：
+=IDENTITYCARDCHECK("222222202202222222")
+*/
+IDENTITYCARDCHECK = 
+    LAMBDA(card_no,
+        IF(OR(LENB(card_no)<>18,LEN(card_no)<>18),"身份证号位数错误！",
+            LET(CheckSum,
+                SUMPRODUCT(--MID(card_no,{1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17},1),{7;9;10;5;8;4;2;1;6;3;7;9;10;5;8;4;2}),
+                CheckDigit, RIGHT(card_no,1),
+                IF(ISERROR(CheckSum),"身份证号有非法字符!",
+                    IF(TExt(CHOOSE(MOD(CheckSum,11)+1,1,0,"X",9,8,7,6,5,4,3,2),0)=CheckDigit,
+                        "身份证号正确!",
+                        "身份证号错误!"
+                    )
+                )
+            )
+        )
+    )
