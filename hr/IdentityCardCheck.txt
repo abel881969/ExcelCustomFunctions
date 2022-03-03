@@ -24,3 +24,62 @@ IDENTITYCARDCHECK =
             )
         )
     )
+
+/*
+函数名称：IDENTITYCARDGET
+
+函数简介：校验身份证号并提取出生日期或性别。首先校验身份证位数应为15或18位，如为18位则继续检查校验位，校验不通过强制返回FALSE，校验通过后根据第二参数，返回校验结果或提取生日或性别。
+
+参数：
+card_no：必填，身份证号
+return：必填，0-返回校验结果，1-提取出生日期，2-提取性别，
+
+示例：
+=IDENTITYCARDGET("222222202202222222",0)
+*/
+
+IDENTITYCARDGET = 
+    LAMBDA(
+        card_no,return,
+        IF(
+            OR(AND(LEN(card_no)<>15,LEN(card_no)<>18),
+            AND(
+                LEN(card_no)=18,
+                LET(
+                    CheckSum,
+                    SUMPRODUCT(--MID(card_no,{1;2;3;4;5;6;7;8;9;10;11;12;13;14;15;16;17},1),{7;9;10;5;8;4;2;1;6;3;7;9;10;5;8;4;2}),
+                    CheckDigit,
+                    RIGHT(card_no,1),
+                    IF(
+                        ISERROR(CheckSum),
+                        TRUE,
+                        TEXT(CHOOSE(MOD(CheckSum,11)+1,1,0,"X",9,8,7,6,5,4,3,2),0)<>CheckDigit
+                    )
+                    )
+                )
+            ),
+            FALSE,
+            IF(
+                return=1,
+                IF(
+                    LEN(card_no)=18,
+                    date(--MID(card_no,7,4),--MID(card_no,11,2),--MID(card_no,13,2)),
+                    date(--"19"&MID(card_no,7,2),--MID(card_no,9,2),--MID(card_no,11,2))
+                ),
+                IF(
+                    return=2,
+                    IF(
+                        ISODD(
+                            IF(
+                                LEN(card_no)=18,
+                                --MID(card_no,17,1),
+                                --MID(card_no,15,1)
+                            )
+                        ),
+                        "M",
+                        "F"
+                    ),
+                    TRUE)
+            )
+        )
+    )

@@ -1,0 +1,36 @@
+/*
+
+函数名称：DAYOFCOINCIDENCE
+
+函数简介：计算两组日期之间的重合天数
+
+参数：
+date1_start：第一个日期区间的开始
+date1_end：第一个日期区间的结束
+date2_start：第二个日期区间的开始
+date2_end：第二个日期区间的结束
+
+示例：
+=DAYOFCOINCIDENCE("2022/1/1","2022/1/31","2022/1/15","2023/1/14")
+
+*/
+
+DAYOFCOINCIDENCE = LAMBDA(
+    date1_start, date1_end,
+    date2_start, date2_end,
+    LET(
+        d1_start, MIN(date1_start,date1_end),
+        d1_end, MAX(date1_start,date1_end),
+        d2_start, MIN(date2_start,date2_end),
+        d2_end, MAX(date2_start,date2_end),
+        MAX(
+            MIN(
+                d1_end - d1_start,
+                d2_end - d1_start,
+                d2_end - d2_start,
+                d1_end - d2_start
+            ) + 1,
+        0
+        )
+    )
+)
