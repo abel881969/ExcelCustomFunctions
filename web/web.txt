@@ -1,0 +1,18 @@
+/*
+函数名称：TranslateYoudao
+
+函数简介：通过有道的翻译服务翻译文本，支持中英互译。
+
+参数：
+value：要翻译的文本内容，中文或英文
+
+示例：
+=TranslateYoudao("你好世界")
+*/
+
+
+TranslateYoudao = 
+    LAMBDA(value,
+        FILTERXML(WEBSERVICE("http://fanyi.youdao.com/translate?&doctype=xml&i="&value),"//translation")
+    )
+
