@@ -1,0 +1,32 @@
+/*
+函数名称：UNIONARRAY
+
+函数简介：将两个相同列数的区域（数组）合并为一个区域（数组）
+
+参数：
+array1：第一个区域（或数组）
+array2：第二个区域（或数组）
+rtn_iferror：如果合并出错，需要返回的值
+
+示例：
+=UNIONARRAY(B2:C4,B7:C8,"合并不成功！")
+*/
+UNIONARRAY = 
+    LAMBDA(
+        array1,array2,rtn_iferror,
+        LET(
+            rows1,ROWS(array1),
+            rows2,ROWS(array2),
+            cols1,COLUMNS(array1),
+            cols2,COLUMNS(array2),
+            rowindex,SEQUENCE(rows1+rows2),
+            colindex,SEQUENCE(1,MAX(cols1,cols2)),
+            result,
+            IF(
+                rowindex<=rows1,
+                INDEX(array1,rowindex,colindex),
+                INDEX(array2,rowindex-rows1,colindex)
+            ),
+            IFERROR(result,rtn_iferror)
+        )
+)
