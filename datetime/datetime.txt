@@ -34,3 +34,46 @@ DAYOFCOINCIDENCE = LAMBDA(
         )
     )
 )
+
+/*
+
+函数名称：CALENDAR
+
+参数：
+date_begin：财务年度的第一天
+date_end：财务年度的最后一天
+*/
+CALENDAR=LAMBDA(
+    date_begin,
+    date_end,
+        LET(
+        dates, SEQUENCE(enddate-begindate+1,1,begindate),
+        years, YEAR(dates),
+        months, MONTH(dates),
+        days, DAY(dates),
+        quarters, "Q"&INT(MONTH(dates)/4)+1,
+        weekdays, WEEKDAY(dates,2),
+        weeknums, SCAN(0,weekdays,LAMBDA(r,a,r+(a=7))),
+        wdays, TEXT(dates,"ddd"),
+        ym, TEXT(dates,"YY-MMMM"),
+        md, TEXT(dates,"MMMDD"),
+        Ms, TEXT(dates,"MMM"),
+        MAKEARRAY(ROWS(dates),11,
+            LAMBDA(r,c,
+                CHOOSE(c,
+                    INDEX(dates,r),
+                    INDEX(years,r),
+                    INDEX(months,r),
+                    INDEX(days,r),
+                    INDEX(quarters,r),
+                    INDEX(weekdays,r),
+                    INDEX(weeknums,r),
+                    INDEX(wdays,r),
+                    INDEX(ym,r),
+                    INDEX(md,r),
+                    INDEX(Ms,r),
+                )
+            )
+        )
+    )
+)
